@@ -1,0 +1,29 @@
+{
+    "manifest_version": 3,
+    "name": "Manga Navigation Helper",
+    "version": "1.0",
+    "description": "Navigate to the next chapter on manga-scans.com and asuratoon.com using the Enter key.",
+    "permissions": [
+      "activeTab",
+      "scripting",
+      "storage"
+    ],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "content_scripts": [
+      {
+        "matches": ["*://*.manga-scans.com/*", "*://*.asuratoon.com/*", "*://*.webtoons.com/*"],
+        "js": ["content.js"]
+      }
+    ],
+    "action": {
+      "default_popup": "popup.html",
+      "default_icon": {
+        "16": "icons/icon16.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
+      }
+    }
+  }
+  
