@@ -9,16 +9,16 @@
       "storage"
     ],
     "background": {
-      "service_worker": "background.js"
+      "service_worker": "js/background.js"
     },
     "content_scripts": [
       {
-        "matches": ["*://*.manga-scans.com/*", "*://*.asuratoon.com/*", "*://*.webtoons.com/*"],
-        "js": ["content.js"]
+        "matches": ["*://*.manga-scans.com/*", "*://*.asuratoon.com/*", "*://*.webtoons.com/*", "*://*.reaperscans.com/*"],
+        "js": ["js/content.js"]
       }
     ],
     "action": {
-      "default_popup": "popup.html",
+      "default_popup": "html/popup.html",
       "default_icon": {
         "16": "icons/icon16.png",
         "48": "icons/icon48.png",

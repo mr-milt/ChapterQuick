@@ -3,7 +3,7 @@
   let speed = 20;
 
   // Ensure the script only runs on specified domains
-  const allowedDomains = ["manga-scans.com", "asuratoon.com", "webtoons.com"];
+  const allowedDomains = ["manga-scans.com", "asuratoon.com", "webtoons.com", "reaperscans.com"];
   if (!allowedDomains.some((domain) => window.location.hostname.includes(domain))) {
     console.log("This site is not supported by the Manga Navigation Helper.");
     return; // Exit the script if the domain is not allowed
@@ -75,6 +75,12 @@
           if (nextChapterElement) {
             url = nextChapterElement.getAttribute("href");
           }
+        } else if (window.location.hostname.includes("reaperscans.com")) {
+          console.log("on reaperscans");
+          const nextChapterElement = document.querySelector("a.inline-flex.items-center.transition.rounded.px-3.py-2.text-sm.font-medium.text-neutral-300.hover\\:bg-neutral-700.hover\\:text-white.ml-2");
+          if (nextChapterElement) {
+            url = nextChapterElement.getAttribute("href");
+          }
         }
 
         if (url) {
@@ -133,7 +139,7 @@
         }
       }
 
-      if (event.key === "W" && event.shiftKey) {
+      if (event.key === "w" && event.shiftKey) {
         console.log("Shift + w pressed");
         speed = Math.max(1, speed - 1); // Decrease speed, ensure it's not less than 1
         try {
@@ -149,7 +155,7 @@
         }
       }
 
-      if (event.key === "S" && event.shiftKey) {
+      if (event.key === "s" && event.shiftKey) {
         console.log("Shift + s pressed");
         speed += 1;
         try {
