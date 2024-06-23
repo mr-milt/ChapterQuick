@@ -2,8 +2,8 @@
 
 Supported sites are:
 
-***Manga-scans.com***
-***Asuratoon.com***
+***Manga-scans.com,***
+***Asuratoon.com,***
 ***webtoons.com***
 
 
