@@ -8,3 +8,7 @@ for sites like webbtoons that does not use a button/spesific class for next capt
 My idea for now. train some type of small LLM
 
 Add a keybindes.html and js file to allow users to chance there keybindes. they keybindes shuild be saved in local storage. 
+
+
+imges to hide if useser wants. 
+https://cdn.black-clover.org/file/mookitosh/i-ll-retire-after-saving-the-world/chapter-1/1.webp
