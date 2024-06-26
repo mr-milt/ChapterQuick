@@ -13,7 +13,7 @@
     },
     "content_scripts": [
       {
-        "matches": ["*://*.manga-scans.com/*", "*://*.asuratoon.com/*", "*://*.webtoons.com/*", "*://*.reaperscans.com/*"],
+        "matches": ["*://*.manga-scans.com/*", "*://*.asuratoon.com/*", "*://*.webtoons.com/*", "*://*.reaperscans.com/*", "*://*.mangagalaxy.me/*"],
         "js": ["js/content.js"]
       }
     ],
