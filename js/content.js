@@ -3,9 +3,9 @@
   let speed = 20;
 
   // Ensure the script only runs on specified domains
-  const allowedDomains = ["manga-scans.com", "asuratoon.com", "webtoons.com", "reaperscans.com"];
+  const allowedDomains = ["manga-scans.com", "asuratoon.com", "webtoons.com", "reaperscans.com", "mangagalaxy.me"];
   if (!allowedDomains.some((domain) => window.location.hostname.includes(domain))) {
-    console.log("This site is not supported by the Manga Navigation Helper.");
+    console.log("This site is not supported by ChapterQuick.");
     return; // Exit the script if the domain is not allowed
   }
 
@@ -81,7 +81,17 @@
           if (nextChapterElement) {
             url = nextChapterElement.getAttribute("href");
           }
+        } else if (window.location.hostname.includes("mangagalaxy.me")) {
+          console.log("on manga galaxy");
+          const nextChapterElement = document.querySelector(".ch-next-btn");
+          if (nextChapterElement) {
+            url = nextChapterElement.getAttribute("href");
+          }
         }
+
+
+
+        // ch-next-btn
 
         if (url) {
           window.location.href = url;

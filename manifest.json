@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "ChapterQuick",
-    "version": "1.1",
+    "version": "1.2",
     "description": "Navigate to the next chapter on spesific websites made easier.",
     "permissions": [
       "activeTab",
@@ -18,7 +18,7 @@
       }
     ],
     "action": {
-      "default_popup": "html/popup.html",
+      "default_popup": "html/ChapterQuick.html",
       "default_icon": {
         "16": "icons/icon16.png",
         "48": "icons/icon48.png",
