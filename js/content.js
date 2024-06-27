@@ -10,8 +10,9 @@
     "reaperscans.com",
     "mangagalaxy.me",
     "seoul-stations-necromancer.com",
+    "toongod.org"
   ];
-  
+
   if (
     !allowedDomains.some((domain) => window.location.hostname.includes(domain))
   ) {
@@ -114,9 +115,21 @@
           if (nextChapterElement) {
             url = nextChapterElement.getAttribute("href");
           }
+        } else if (
+          window.location.hostname.includes("toongod.org")
+        ) {
+          console.log("on toongod.org");
+          const nextChapterElement = document.querySelector(
+            ".btn.next_page"
+          );
+          if (nextChapterElement) {
+            url = nextChapterElement.getAttribute("href");
+          }
         }
 
-        // seoul-stations-necromancer.com   next-post
+
+        
+        // toongod.org   .btn.next_page
 
         // ch-next-btn
 
