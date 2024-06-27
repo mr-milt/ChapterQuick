@@ -3,8 +3,18 @@
   let speed = 20;
 
   // Ensure the script only runs on specified domains
-  const allowedDomains = ["manga-scans.com", "asuratoon.com", "webtoons.com", "reaperscans.com", "mangagalaxy.me"];
-  if (!allowedDomains.some((domain) => window.location.hostname.includes(domain))) {
+  const allowedDomains = [
+    "manga-scans.com",
+    "asuratoon.com",
+    "webtoons.com",
+    "reaperscans.com",
+    "mangagalaxy.me",
+    "seoul-stations-necromancer.com",
+  ];
+  
+  if (
+    !allowedDomains.some((domain) => window.location.hostname.includes(domain))
+  ) {
     console.log("This site is not supported by ChapterQuick.");
     return; // Exit the script if the domain is not allowed
   }
@@ -13,7 +23,10 @@
   chrome.storage.local.get(["speed", "scrolling"], function (result) {
     try {
       if (chrome.runtime.lastError) {
-        console.error("Error retrieving data from storage: ", chrome.runtime.lastError);
+        console.error(
+          "Error retrieving data from storage: ",
+          chrome.runtime.lastError
+        );
       } else {
         if (result.speed !== undefined) {
           speed = result.speed;
@@ -53,7 +66,9 @@
         console.log("Enter pressed");
         if (window.location.hostname.includes("manga-scans.com")) {
           console.log("on manga-scans");
-          const nextChapterElement = document.querySelector(".col-md-6.next-post a");
+          const nextChapterElement = document.querySelector(
+            ".col-md-6.next-post a"
+          );
           if (nextChapterElement) {
             url = nextChapterElement.getAttribute("href");
           }
@@ -77,7 +92,9 @@
           }
         } else if (window.location.hostname.includes("reaperscans.com")) {
           console.log("on reaperscans");
-          const nextChapterElement = document.querySelector("a.inline-flex.items-center.transition.rounded.px-3.py-2.text-sm.font-medium.text-neutral-300.hover\\:bg-neutral-700.hover\\:text-white.ml-2");
+          const nextChapterElement = document.querySelector(
+            "a.inline-flex.items-center.transition.rounded.px-3.py-2.text-sm.font-medium.text-neutral-300.hover\\:bg-neutral-700.hover\\:text-white.ml-2"
+          );
           if (nextChapterElement) {
             url = nextChapterElement.getAttribute("href");
           }
@@ -87,9 +104,19 @@
           if (nextChapterElement) {
             url = nextChapterElement.getAttribute("href");
           }
+        } else if (
+          window.location.hostname.includes("seoul-stations-necromancer.com")
+        ) {
+          console.log("on seoul-stations-necromancer");
+          const nextChapterElement = document.querySelector(
+            ".col-md-6.next-post a"
+          );
+          if (nextChapterElement) {
+            url = nextChapterElement.getAttribute("href");
+          }
         }
 
-
+        // seoul-stations-necromancer.com   next-post
 
         // ch-next-btn
 
@@ -104,7 +131,10 @@
         try {
           chrome.storage.local.set({ scrolling: scrolling }, function () {
             if (chrome.runtime.lastError) {
-              console.error("Error saving scrolling state to storage: ", chrome.runtime.lastError);
+              console.error(
+                "Error saving scrolling state to storage: ",
+                chrome.runtime.lastError
+              );
             } else {
               console.log(`Scrolling state set to ${scrolling} and saved.`);
             }
@@ -123,7 +153,10 @@
         try {
           chrome.storage.local.set({ speed: speed }, function () {
             if (chrome.runtime.lastError) {
-              console.error("Error saving speed to storage: ", chrome.runtime.lastError);
+              console.error(
+                "Error saving speed to storage: ",
+                chrome.runtime.lastError
+              );
             } else {
               console.log(`Speed decreased to ${speed} and saved.`);
             }
@@ -139,7 +172,10 @@
         try {
           chrome.storage.local.set({ speed: speed }, function () {
             if (chrome.runtime.lastError) {
-              console.error("Error saving speed to storage: ", chrome.runtime.lastError);
+              console.error(
+                "Error saving speed to storage: ",
+                chrome.runtime.lastError
+              );
             } else {
               console.log(`Speed increased to ${speed} and saved.`);
             }
@@ -155,7 +191,10 @@
         try {
           chrome.storage.local.set({ speed: speed }, function () {
             if (chrome.runtime.lastError) {
-              console.error("Error saving speed to storage: ", chrome.runtime.lastError);
+              console.error(
+                "Error saving speed to storage: ",
+                chrome.runtime.lastError
+              );
             } else {
               console.log(`Speed decreased to ${speed} and saved.`);
             }
@@ -171,7 +210,10 @@
         try {
           chrome.storage.local.set({ speed: speed }, function () {
             if (chrome.runtime.lastError) {
-              console.error("Error saving speed to storage: ", chrome.runtime.lastError);
+              console.error(
+                "Error saving speed to storage: ",
+                chrome.runtime.lastError
+              );
             } else {
               console.log(`Speed increased to ${speed} and saved.`);
             }
