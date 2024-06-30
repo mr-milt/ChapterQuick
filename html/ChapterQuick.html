@@ -1,23 +1,64 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Manga Navigation Helper</title>
+    <title>ChapterQuick</title>
     <style>
       body {
-        width: 200px;
+        width: 250px;
         font-family: Arial, sans-serif;
-        background-color: white;
+        background-color: #f5f5f5;
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
       }
       h1 {
-        font-size: 18px;
+        font-size: 22px;
+        color: #333;
+        margin-bottom: 20px;
+      }
+      p {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 20px;
+      }
+      .info {
+        margin: 15px 0;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #fff;
+      }
+      .info pre {
+        font-size: 14px;
+        color: #333;
+        margin: 0;
+      }
+      button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 16px;
+        color: #fff;
+        background-color: #0066cc;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button a {
+        color: #fff;
+        text-decoration: none;
+      }
+      button:hover {
+        background-color: #004d99;
       }
     </style>
   </head>
   <body>
-    <h1>Manga Navigation Helper</h1>
-    <p>Press Enter to navigate to the next chapter on supported sites.</p>
-    <div class="speed"><pre>Current speed: <span id="speed-value">Loading...</span></pre></div>
-    <div class="scrolling"><pre>scrolling state: <span id="scrolling-state">Loading...</span></pre></div>
+    <h1>ChapterQuick</h1>
+    <p>Press Enter to navigate to the next chapter on supported sites!</p>
+    <div class="info"><pre>Current speed: <span id="speed-value">Loading...</span></pre></div>
+    <div class="info"><pre>Scrolling state: <span id="scrolling-state">Loading...</span></pre></div>
     <button><a href="links.html">Links</a></button>
     <script src="inlineJs/stateInfo.js"></script>
   </body>
