@@ -13,7 +13,7 @@
     },
     "content_scripts": [
       {
-        "matches": ["*://*.manga-scans.com/*", "*://*.asuratoon.com/*", "*://*.webtoons.com/*", "*://*.reaperscans.com/*", "*://*.mangagalaxy.me/*", "*://*.seoul-stations-necromancer.com/*", "*://*.toongod.org/*"],
+        "matches": ["*://*/*"],
         "js": ["js/content.js"]
       }
     ],

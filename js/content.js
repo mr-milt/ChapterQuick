@@ -2,23 +2,7 @@
   let scrolling = false;
   let speed = 20;
 
-  // Ensure the script only runs on specified domains
-  const allowedDomains = [
-    "manga-scans.com",
-    "asuratoon.com",
-    "webtoons.com",
-    "reaperscans.com",
-    "mangagalaxy.me",
-    "seoul-stations-necromancer.com",
-    "toongod.org"
-  ];
 
-  if (
-    !allowedDomains.some((domain) => window.location.hostname.includes(domain))
-  ) {
-    console.log("This site is not supported by ChapterQuick.");
-    return; // Exit the script if the domain is not allowed
-  }
 
   // Retrieve the saved speed and scrolling state from Chrome storage
   chrome.storage.local.get(["speed", "scrolling"], function (result) {
@@ -59,6 +43,8 @@
       await sleep(speed);
     }
   }
+
+  updateScroll() // to keep scrolling betwwn web pages
 
   document.addEventListener("keydown", function (event) {
     try {
@@ -137,7 +123,6 @@
           window.location.href = url;
         }
       }
-
       if (event.key === "k") {
         console.log("K pressed");
         scrolling = !scrolling;
@@ -159,7 +144,6 @@
           updateScroll();
         }
       }
-
       if (event.key === "w" && !event.shiftKey) {
         console.log("w pressed");
         speed = Math.max(1, speed - 10); // Decrease speed, ensure it's not less than 1
@@ -178,7 +162,6 @@
           console.error("Caught error setting speed: ", error);
         }
       }
-
       if (event.key === "s" && !event.shiftKey) {
         console.log("s pressed");
         speed += 10;
@@ -197,7 +180,6 @@
           console.error("Caught error setting speed: ", error);
         }
       }
-
       if (event.key === "w" && event.shiftKey) {
         console.log("Shift + w pressed");
         speed = Math.max(1, speed - 1); // Decrease speed, ensure it's not less than 1
@@ -216,7 +198,6 @@
           console.error("Caught error setting speed: ", error);
         }
       }
-
       if (event.key === "s" && event.shiftKey) {
         console.log("Shift + s pressed");
         speed += 1;
@@ -234,6 +215,10 @@
         } catch (error) {
           console.error("Caught error setting speed: ", error);
         }
+      }
+
+      if (event.key === "Escape") {
+        this.exitFullscreen()
       }
     } catch (error) {
       console.error("Caught error handling keydown event: ", error);
