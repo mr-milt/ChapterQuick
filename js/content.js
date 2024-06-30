@@ -2,8 +2,6 @@
   let scrolling = false;
   let speed = 20;
 
-
-
   // Retrieve the saved speed and scrolling state from Chrome storage
   chrome.storage.local.get(["speed", "scrolling"], function (result) {
     try {
@@ -44,7 +42,40 @@
     }
   }
 
-  updateScroll() // to keep scrolling betwwn web pages
+  updateScroll(); // to keep scrolling between web pages
+
+  function isFullscreen() {
+    return (
+      document.fullscreenElement ||
+      document.mozFullScreenElement ||
+      document.webkitFullscreenElement ||
+      document.msFullscreenElement
+    );
+  }
+
+  function enterFullscreen() {
+    if (document.documentElement.requestFullscreen) {
+      return document.documentElement.requestFullscreen();
+    } else if (document.documentElement.mozRequestFullScreen) {
+      return document.documentElement.mozRequestFullScreen();
+    } else if (document.documentElement.webkitRequestFullscreen) {
+      return document.documentElement.webkitRequestFullscreen();
+    } else if (document.documentElement.msRequestFullscreen) {
+      return document.documentElement.msRequestFullscreen();
+    }
+  }
+
+  function exitFullscreen() {
+    if (document.exitFullscreen) {
+      return document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      return document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+      return document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      return document.msExitFullscreen();
+    }
+  }
 
   document.addEventListener("keydown", function (event) {
     try {
@@ -91,38 +122,19 @@
           if (nextChapterElement) {
             url = nextChapterElement.getAttribute("href");
           }
-        } else if (
-          window.location.hostname.includes("seoul-stations-necromancer.com")
-        ) {
-          console.log("on seoul-stations-necromancer");
-          const nextChapterElement = document.querySelector(
-            ".col-md-6.next-post a"
-          );
-          if (nextChapterElement) {
-            url = nextChapterElement.getAttribute("href");
-          }
-        } else if (
-          window.location.hostname.includes("toongod.org")
-        ) {
+        } else if (window.location.hostname.includes("toongod.org")) {
           console.log("on toongod.org");
-          const nextChapterElement = document.querySelector(
-            ".btn.next_page"
-          );
+          const nextChapterElement = document.querySelector(".btn.next_page");
           if (nextChapterElement) {
             url = nextChapterElement.getAttribute("href");
           }
         }
-
-
-        
-        // toongod.org   .btn.next_page
-
-        // ch-next-btn
 
         if (url) {
           window.location.href = url;
         }
       }
+
       if (event.key === "k") {
         console.log("K pressed");
         scrolling = !scrolling;
@@ -144,6 +156,7 @@
           updateScroll();
         }
       }
+
       if (event.key === "w" && !event.shiftKey) {
         console.log("w pressed");
         speed = Math.max(1, speed - 10); // Decrease speed, ensure it's not less than 1
@@ -162,6 +175,7 @@
           console.error("Caught error setting speed: ", error);
         }
       }
+
       if (event.key === "s" && !event.shiftKey) {
         console.log("s pressed");
         speed += 10;
@@ -180,6 +194,7 @@
           console.error("Caught error setting speed: ", error);
         }
       }
+
       if (event.key === "w" && event.shiftKey) {
         console.log("Shift + w pressed");
         speed = Math.max(1, speed - 1); // Decrease speed, ensure it's not less than 1
@@ -198,6 +213,7 @@
           console.error("Caught error setting speed: ", error);
         }
       }
+
       if (event.key === "s" && event.shiftKey) {
         console.log("Shift + s pressed");
         speed += 1;
@@ -218,10 +234,46 @@
       }
 
       if (event.key === "Escape") {
-        this.exitFullscreen()
+        console.log("Escape pressed");
+        console.log("Fullscreen element:", isFullscreen());
+        if (isFullscreen()) {
+          console.log("Exiting fullscreen");
+          exitFullscreen().catch((err) => {
+            console.error("Error attempting to exit fullscreen mode:", err);
+          });
+        }
       }
     } catch (error) {
       console.error("Caught error handling keydown event: ", error);
+    }
+  });
+
+  // Listen for fullscreen change events
+  document.addEventListener("fullscreenchange", function () {
+    console.log("Fullscreen change detected:", isFullscreen());
+    if (!isFullscreen()) {
+      console.log("Exited fullscreen mode");
+    }
+  });
+
+  document.addEventListener("mozfullscreenchange", function () {
+    console.log("Fullscreen change detected:", isFullscreen());
+    if (!isFullscreen()) {
+      console.log("Exited fullscreen mode");
+    }
+  });
+
+  document.addEventListener("webkitfullscreenchange", function () {
+    console.log("Fullscreen change detected:", isFullscreen());
+    if (!isFullscreen()) {
+      console.log("Exited fullscreen mode");
+    }
+  });
+
+  document.addEventListener("msfullscreenchange", function () {
+    console.log("Fullscreen change detected:", isFullscreen());
+    if (!isFullscreen()) {
+      console.log("Exited fullscreen mode");
     }
   });
 })();
