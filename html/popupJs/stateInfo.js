@@ -8,7 +8,7 @@ function updateValues() {
               document.getElementById("scrolling-state").textContent = "Error loading scrolling state";
           } else {
               if (result.speed !== undefined) {
-                  console.log(result.speed, result.scrolling);
+                  console.log(result.speed);
                   document.getElementById("speed-value").textContent = result.speed;
               } else {
                   document.getElementById("speed-value").textContent = "Default (20)";
@@ -20,9 +20,9 @@ function updateValues() {
                   document.getElementById("scrolling-state").textContent = "Off";
               }
               if (result.comments !== undefined) {
-                document.getElementById("comments-state").textContent = result.comments ? "On" : "Off";
+                document.getElementById("comments-state").textContent = result.comments ? "showing" : "Not Showing";
             } else {
-                document.getElementById("comments-state").textContent = "Off";
+                document.getElementById("comments-state").textContent = "Showing";
             }
           }
       });
@@ -33,5 +33,5 @@ function updateValues() {
 
 document.addEventListener("DOMContentLoaded", function () {
   updateValues();
-  setInterval(updateValues, 5000); // Update every 5 seconds
+  setInterval(updateValues, 350); // Update every 5 seconds
 });

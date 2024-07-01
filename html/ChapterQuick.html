@@ -2,68 +2,31 @@
 <html>
   <head>
     <title>ChapterQuick</title>
-    <style>
-      body {
-        width: 300px;
-        font-family: Arial, sans-serif;
-        background-color: #f5f5f5;
-        margin: 0 auto;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        text-align: center;
-      }
-      h1 {
-        font-size: 24px;
-        color: #333;
-        margin-bottom: 20px;
-      }
-      p {
-        font-size: 16px;
-        color: #666;
-        margin-bottom: 20px;
-      }
-      .info {
-        margin: 15px 0;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        background-color: #fff;
-      }
-      .info pre {
-        font-size: 14px;
-        color: #333;
-        margin: 0;
-      }
-      button {
-        margin-top: 20px;
-        padding: 10px 20px;
-        font-size: 16px;
-        color: #fff;
-        background-color: #0066cc;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        display: inline-block;
-        margin-right: 10px;
-      }
-      button a {
-        color: #fff;
-        text-decoration: none;
-      }
-      button:hover {
-        background-color: #004d99;
-      }
-    </style>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="css/index.css" />
   </head>
   <body>
     <h1>ChapterQuick</h1>
-    <p>This addon makes add quality of life addons on specific manhwa and or webtoon sites.</p>
-    <div class="info"><pre>Current speed: <span id="speed-value">Loading...</span></pre></div>
-    <div class="info"><pre>Scrolling state: <span id="scrolling-state">Loading...</span></pre></div>
-    <div class="info"><pre>comments: <span id="comments-state">Loading...</span></pre></div>
-    <button><a href="links.html">Links</a></button>
-    <button><a href="settings.html">Settings</a></button>
+    <p>
+      This addon makes add quality of life addons on specific manhwa and or
+      webtoon sites.
+    </p>
+    <div class="info">
+      <pre>Current speed: <span id="speed-value">Loading...</span></pre>
+    </div>
+    <div class="info">
+      <pre>Scrolling state: <span id="scrolling-state">Loading...</span></pre>
+    </div>
+    <div class="info">
+      <pre>comments: <span id="comments-state">Loading...</span></pre>
+    </div>
+    <a class="btn btn-primary" href="links.html" role="button">Links</a>
+    <a class="btn btn-primary" href="settings.html" role="button">Settings</a>
     <script src="popupJs/stateInfo.js"></script>
   </body>
 </html>

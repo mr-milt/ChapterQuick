@@ -15,7 +15,7 @@ function updateRules(comments = null) {
     console.log("Updating rules. Block comments:", blockComments);
 
     // Default behavior based on comments state
-    if (blockComments) {
+    if (!blockComments) {
       chrome.declarativeNetRequest.updateDynamicRules({
         removeRuleIds: [],
         addRules: [
@@ -27,6 +27,17 @@ function updateRules(comments = null) {
             },
             "condition": {
               "urlFilter": "*://*.disqus.com/*",
+              "resourceTypes": ["main_frame", "sub_frame", "script"]
+            }
+          },
+          {
+            "id": 2,
+            "priority": 1,
+            "action": {
+              "type": "block"
+            },
+            "condition": {
+              "urlFilter": "*comments*",
               "resourceTypes": ["main_frame", "sub_frame", "script"]
             }
           }
@@ -41,7 +52,7 @@ function updateRules(comments = null) {
       });
     } else {
       chrome.declarativeNetRequest.updateDynamicRules({
-        removeRuleIds: [1]
+        removeRuleIds: [1, 2]
       }, () => {
         if (chrome.runtime.lastError) {
           console.error("Error removing rule:", chrome.runtime.lastError);
@@ -65,6 +76,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 // Function to check and log current rules
 function checkCurrentRules() {
   chrome.declarativeNetRequest.getDynamicRules((rules) => {
-    console.log("Current dynamic rules:", rules);
+    // console.log("Current dynamic rules:", rules);
   });
 }

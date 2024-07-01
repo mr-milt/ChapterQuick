@@ -1,12 +1,11 @@
-(function () {
+(async function () {
   let scrolling = false;
   let speed = 20;
   let comments = false;
 
   const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
 
-
-  chrome.storage.local.get(
+  await chrome.storage.local.get(
     ["speed", "scrolling", "comments"],
     async function (result) {
       try {
@@ -52,6 +51,11 @@
 
   document.addEventListener("keydown", function (event) {
     try {
+      const activeElement = document.activeElement;
+      if (activeElement.tagName === "INPUT" || activeElement.tagName === "TEXTAREA" || activeElement.isContentEditable) {
+        return; // Don't execute keybindings if the user is typing in an input, textarea, or editable element
+      }
+
       if (event.key === "Enter") {
         let url = null;
         console.log("Enter pressed");
@@ -106,7 +110,7 @@
         if (url) {
           window.location.href = url;
         }
-      } 
+      }
 
       if (event.key === "k") {
         console.log("K pressed");
@@ -159,7 +163,7 @@
         }
       }
 
-      if (event.key === "w" && event.shiftKey) {
+      if (event.key === "W" && event.shiftKey) { // Corrected to uppercase W
         console.log("Shift + w pressed");
         speed = Math.max(1, speed - 1); // Decrease speed, ensure it's not less than 1
         try {
@@ -175,7 +179,7 @@
         }
       }
 
-      if (event.key === "s" && event.shiftKey) {
+      if (event.key === "S" && event.shiftKey) { // Corrected to uppercase S
         console.log("Shift + s pressed");
         speed += 1;
         try {
