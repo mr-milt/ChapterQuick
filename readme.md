@@ -16,20 +16,9 @@
 - **"s"** -> decrese the scolling speed whit 10,
 - **"Shift + w"** -> increse the scrolling speed whit 1,
 - **"Shift + w"** -> decrese the scolling speed whit 1
-<!-- - **Esc** -> Exit fullscreen mode -->
 
 
-## **Chance log** 
-
-1. ### 1.2:
-    1. Made addon render on all sites but only look for next chapter links for spesific site
-    3. Fixed links.html to actuly take one to the right site
-
-2. ### 1.1:
-    1. added auto scrolling by pressing "k"
-    2. added more suported sites
-
-
+## [**Chance log**](md/chanceLog.md) <br>
 
 
 ![Chapter quick logo](icons/icon16.png)

@@ -1,7 +1,7 @@
 function updateValues() {
   try {
       // Retrieve the saved speed and scrolling from browser storage
-      chrome.storage.local.get(["speed", "scrolling"], function (result) {
+      chrome.storage.local.get(["speed", "scrolling", "comments"], function (result) {
           if (chrome.runtime.lastError) {
               console.error(chrome.runtime.lastError);
               document.getElementById("speed-value").textContent = "Error loading speed";
@@ -19,6 +19,11 @@ function updateValues() {
               } else {
                   document.getElementById("scrolling-state").textContent = "Off";
               }
+              if (result.comments !== undefined) {
+                document.getElementById("comments-state").textContent = result.comments ? "On" : "Off";
+            } else {
+                document.getElementById("comments-state").textContent = "Off";
+            }
           }
       });
   } catch (error) {

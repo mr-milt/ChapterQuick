@@ -4,7 +4,7 @@
     <title>ChapterQuick</title>
     <style>
       body {
-        width: 250px;
+        width: 300px;
         font-family: Arial, sans-serif;
         background-color: #f5f5f5;
         margin: 0 auto;
@@ -14,7 +14,7 @@
         text-align: center;
       }
       h1 {
-        font-size: 22px;
+        font-size: 24px;
         color: #333;
         margin-bottom: 20px;
       }
@@ -44,6 +44,8 @@
         border: none;
         border-radius: 5px;
         cursor: pointer;
+        display: inline-block;
+        margin-right: 10px;
       }
       button a {
         color: #fff;
@@ -56,10 +58,12 @@
   </head>
   <body>
     <h1>ChapterQuick</h1>
-    <p>Press Enter to navigate to the next chapter on supported sites!</p>
+    <p>This addon makes add quality of life addons on specific manhwa and or webtoon sites.</p>
     <div class="info"><pre>Current speed: <span id="speed-value">Loading...</span></pre></div>
     <div class="info"><pre>Scrolling state: <span id="scrolling-state">Loading...</span></pre></div>
+    <div class="info"><pre>comments: <span id="comments-state">Loading...</span></pre></div>
     <button><a href="links.html">Links</a></button>
-    <script src="inlineJs/stateInfo.js"></script>
+    <button><a href="settings.html">Settings</a></button>
+    <script src="popupJs/stateInfo.js"></script>
   </body>
 </html>

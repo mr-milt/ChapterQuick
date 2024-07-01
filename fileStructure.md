@@ -2,8 +2,9 @@ File structure/
 │
 ├── manifest.json
 ├── readme.md
-├── notes.md
+├── fileStructre.md
 ├── .gitignore
+├── rules.json
 │
 ├── js/
 │   ├── content.js
@@ -12,8 +13,22 @@ File structure/
 ├── html/
 │   ├── popup.html
 │   ├── links.html
-│   └── inlineJs/
-│       └──  popup.js  
+│   ├── settings.html
+│   │
+│   ├── popupJs/
+│   │   ├──  stateInfo.js  
+│   │   └── settings.js
+│   │
+│   └── css/
+│       └── index.css
+│
+├── metadata/
+│   └── generated_indexed_rulesets/
+│       └── _ruleset1
+│
+├── developmentTools/
+│    ├── tools.md
+│    └── ideas.md
 │    
 └── icons/
     ├── icon16.svg

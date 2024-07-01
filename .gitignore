@@ -1,2 +1,3 @@
 *.txt
-/test
+*/test
+/_metadata

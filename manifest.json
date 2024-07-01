@@ -1,29 +1,42 @@
 {
-    "manifest_version": 3,
-    "name": "ChapterQuick",
-    "version": "1.2",
-    "description": "Navigate to the next chapter on spesific websites made easier.",
-    "permissions": [
-      "activeTab",
-      "scripting",
-      "storage"
-    ],
-    "background": {
-      "service_worker": "js/background.js"
-    },
-    "content_scripts": [
-      {
-        "matches": ["*://*/*"],
-        "js": ["js/content.js"]
-      }
-    ],
-    "action": {
-      "default_popup": "html/ChapterQuick.html",
-      "default_icon": {
-        "16": "icons/icon16.png",
-        "48": "icons/icon48.png",
-        "128": "icons/icon128.png"
-      }
+  "manifest_version": 3,
+  "name": "ChapterQuick",
+  "version": "1.3",
+  "description": "This addon adds quality of life features on specific manhwa and webtoon sites.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "declarativeNetRequest"
+  ],
+  "background": {
+    "service_worker": "js/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": ["js/content.js"]
     }
+  ],
+  "action": {
+    "default_popup": "html/ChapterQuick.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleset_1",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+  "content_security_policy": {
+    "script-src": "'self'",
+    "object-src": "'self'"
   }
-  
+}

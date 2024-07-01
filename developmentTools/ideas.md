@@ -10,5 +10,8 @@ My idea for now. train some type of small LLM
 Add a keybindes.html and js file to allow users to chance there keybindes. they keybindes shuild be saved in local storage. 
 
 
+Option to turn on/off disqus comments
+
+
 imges to hide if useser wants. 
 https://cdn.black-clover.org/file/mookitosh/i-ll-retire-after-saving-the-world/chapter-1/1.webp
