@@ -8,7 +8,7 @@
 [asuratoon.com](https://asuratoon.com/) <br>
 [toongod.org](https://toongod.org/) <br>
 [mangagalaxy.me](https://mangagalaxy.me/) <br>
-
+[manhuatop.org](https://manhuatop.org/) <br>
 
 ## Key Bindes:
 - **"k"** -> start/stop auto scroling,
@@ -18,7 +18,7 @@
 - **"Shift + w"** -> decrese the scolling speed whit 1
 
 
-## [**Chance log**](md/chanceLog.md) <br>
+### [Read chance log: **Chance log**](md/chanceLog.md) <br>
 
 
-![Chapter quick logo](icons/icon16.png)
+![Chapter quick logo](icons/icon16.png) <br>
