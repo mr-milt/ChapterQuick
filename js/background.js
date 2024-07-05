@@ -44,7 +44,7 @@ function updateRules(comments = null) {
         ]
       }, () => {
         if (chrome.runtime.lastError) {
-          console.error("Error adding rule:", chrome.runtime.lastError);
+          console.log("Error adding rule:", chrome.runtime.lastError);
         } else {
           console.log("Blocking Disqus requests.");
           checkCurrentRules();

@@ -1,12 +1,14 @@
 document.addEventListener('DOMContentLoaded', function () {
   const toggleComments = document.getElementById('toggle-comments');
+  const toggleDarkmode = document.getElementById('toggle-darkmode');
 
   // Retrieve the current state
-  chrome.storage.local.get('comments', function (result) {
+  chrome.storage.local.get(['comments', 'makeDark'], function (result) {
     toggleComments.checked = result.comments || false;
+    toggleDarkmode.checked = result.makeDark || false;
   });
 
-  // Add event listener to update the state
+  // Add event listener to update the comments state
   toggleComments.addEventListener('change', function () {
     const newState = toggleComments.checked;
     chrome.storage.local.set({ comments: newState }, function () {
@@ -19,6 +21,14 @@ document.addEventListener('DOMContentLoaded', function () {
           console.log(response.status);
         }
       });
+    });
+  });
+
+  // Add event listener to update the dark mode state
+  toggleDarkmode.addEventListener('change', function () {
+    const newState = toggleDarkmode.checked;
+    chrome.storage.local.set({ makeDark: newState }, function () {
+      console.log('Dark mode state updated to:', newState);
     });
   });
 });

@@ -9,6 +9,7 @@
 [toongod.org](https://toongod.org/) <br>
 [mangagalaxy.me](https://mangagalaxy.me/) <br>
 [manhuatop.org](https://manhuatop.org/) <br>
+[mangadex.org](https://mangadex.org/) <br>
 
 ## Key Bindes:
 - **"k"** -> start/stop auto scroling,
