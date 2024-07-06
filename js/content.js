@@ -4,11 +4,11 @@
   let comments = true;
   let makeDark = false;
   let autoNext = false;
-  let autoNextDelay = 5;
+  let autoNextDelay = 5000; // miliseconds
 
-  const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
+  const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay)); // uses millisenconds and needs to be awaited
 
-  // Function to update the background color based on the dark mode setting
+
   function updateBackgroundColor(makeDark) {
     if (makeDark) {
       document.body.style.backgroundColor = "black";
@@ -56,7 +56,7 @@
             console.log("Using default dark mode state: ", makeDark);
           }
           if (result.autoNext !== undefined) {
-            autoNext = result.autoNext; // Fixed the typo here
+            autoNext = result.autoNext; 
             console.log(
               "Retrieved auto next chapter state from storage: ",
               autoNext
@@ -65,7 +65,7 @@
             console.log("Using default auto next chapter state: ", autoNext);
           }
           if (result.autoNextDelay !== undefined) {
-            autoNextDelay = result.autoNextDelay; // Fixed the typo here
+            autoNextDelay = result.autoNextDelay; 
             console.log(
               "Retrieved auto next autoNextDelay delay from storage: ",
               autoNextDelay
@@ -233,7 +233,6 @@
       }
 
       if (event.key === "W" && event.shiftKey) {
-        // Corrected to uppercase W
         console.log("Shift + w pressed");
         speed = Math.max(1, speed - 1); // Decrease speed, ensure it's not less than 1
         try {
@@ -253,7 +252,6 @@
       }
 
       if (event.key === "S" && event.shiftKey) {
-        // Corrected to uppercase S
         console.log("Shift + s pressed");
         speed += 1;
         try {
@@ -348,7 +346,7 @@
         }
 
         if (url) {
-          sleep(autoNextDelay);
+          await sleep(autoNextDelay);
           window.location.href = url;
         }
       }
