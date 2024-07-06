@@ -1,11 +1,13 @@
 document.addEventListener('DOMContentLoaded', function () {
   const toggleComments = document.getElementById('toggle-comments');
   const toggleDarkmode = document.getElementById('toggle-darkmode');
+  const toggleAutoNext = document.getElementById('toggle-autoNext');
 
   // Retrieve the current state
-  chrome.storage.local.get(['comments', 'makeDark'], function (result) {
-    toggleComments.checked = result.comments || false;
+  chrome.storage.local.get(['comments', 'makeDark', 'autoNext'], function (result) {
+    toggleComments.checked = result.comments || true;
     toggleDarkmode.checked = result.makeDark || false;
+    toggleAutoNext.checked = result.autoNext || false;
   });
 
   // Add event listener to update the comments state
@@ -31,4 +33,13 @@ document.addEventListener('DOMContentLoaded', function () {
       console.log('Dark mode state updated to:', newState);
     });
   });
+
+  // Add event listener to update the auto next chapter state
+  toggleAutoNext.addEventListener('change', function () {
+    const newState = toggleAutoNext.checked;
+    chrome.storage.local.set({ autoNext: newState }, function () {
+      console.log('Auto next chapter mode state updated to:', newState);
+    });
+  });
 });
+

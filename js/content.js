@@ -1,8 +1,10 @@
 (async function () {
   let scrolling = false;
   let speed = 20;
-  let comments = false;
+  let comments = true;
   let makeDark = false;
+  let autoNext = false;
+  let autoNextDelay = 5;
 
   const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
 
@@ -18,8 +20,8 @@
 
   // Retrieve the initial settings from Chrome storage
   await chrome.storage.local.get(
-    ["speed", "scrolling", "comments", "makeDark", "scrollbarSee"],
-    async function (result) {
+    ["speed", "scrolling", "comments", "makeDark", "autoNext", "autoNextDelay"],
+    function (result) {
       try {
         if (chrome.runtime.lastError) {
           console.error(
@@ -53,6 +55,27 @@
           } else {
             console.log("Using default dark mode state: ", makeDark);
           }
+          if (result.autoNext !== undefined) {
+            autoNext = result.autoNext; // Fixed the typo here
+            console.log(
+              "Retrieved auto next chapter state from storage: ",
+              autoNext
+            );
+          } else {
+            console.log("Using default auto next chapter state: ", autoNext);
+          }
+          if (result.autoNextDelay !== undefined) {
+            autoNextDelay = result.autoNextDelay; // Fixed the typo here
+            console.log(
+              "Retrieved auto next autoNextDelay delay from storage: ",
+              autoNextDelay
+            );
+          } else {
+            console.log(
+              "Using default auto next autoNextDelay delay: ",
+              autoNextDelay
+            );
+          }
         }
       } catch (error) {
         console.error("Caught error retrieving values: ", error);
@@ -68,7 +91,7 @@
     }
   }
 
-  document.addEventListener("keydown", function (event) {
+  document.addEventListener("keydown", async function (event) {
     try {
       const activeElement = document.activeElement;
       if (
@@ -252,4 +275,83 @@
       console.error("Caught error handling keydown event: ", error);
     }
   });
+
+  window.onscroll = async function autoNextChapter() {
+    const totalPageHeight = document.body.scrollHeight;
+    const scrollPoint = window.scrollY + window.innerHeight;
+
+    if (scrollPoint >= totalPageHeight) {
+      console.log("at the bottom");
+      if (autoNext) {
+        let url = null;
+        console.log("Auto next chapter enabled");
+        if (window.location.hostname.includes("manga-scans.com")) {
+          console.log("on manga-scans");
+          const nextChapterElement = document.querySelector(
+            ".col-md-6.next-post a"
+          );
+          if (nextChapterElement) {
+            url = nextChapterElement.getAttribute("href");
+          }
+        } else if (window.location.hostname.includes("asuratoon.com")) {
+          console.log("on asuratoon");
+          const nextChapterElement = document.querySelector(".ch-next-btn");
+          if (nextChapterElement) {
+            url = nextChapterElement.getAttribute("href");
+          }
+        } else if (window.location.hostname.includes("webtoons.com")) {
+          console.log("on webtoons");
+          const currentUrl = window.location.href;
+          const urlParams = new URLSearchParams(new URL(currentUrl).search);
+          const currentEpisode = parseInt(urlParams.get("episode_no"));
+          const nextEpisode = currentEpisode + 1;
+          const nextChapterElement = document.querySelector(
+            `li[data-episode-no="${nextEpisode}"] a`
+          );
+          if (nextChapterElement) {
+            url = nextChapterElement.getAttribute("href");
+          }
+        } else if (window.location.hostname.includes("reaperscans.com")) {
+          console.log("on reaperscans");
+          const nextChapterElement = document.querySelector(
+            "a.inline-flex.items-center.transition.rounded.px-3.py-2.text-sm.font-medium.text-neutral-300.hover\\:bg-neutral-700.hover\\:text-white.ml-2"
+          );
+          if (nextChapterElement) {
+            url = nextChapterElement.getAttribute("href");
+          }
+        } else if (window.location.hostname.includes("mangagalaxy.me")) {
+          console.log("on manga galaxy");
+          const nextChapterElement = document.querySelector(".ch-next-btn");
+          if (nextChapterElement) {
+            url = nextChapterElement.getAttribute("href");
+          }
+        } else if (window.location.hostname.includes("toongod.org")) {
+          console.log("on toongod.org");
+          const nextChapterElement = document.querySelector(".btn.next_page");
+          if (nextChapterElement) {
+            url = nextChapterElement.getAttribute("href");
+          }
+        } else if (window.location.hostname.includes("manhuatop.org")) {
+          console.log("on manhuatop.org");
+          const nextChapterElement = document.querySelector(".btn.next_page");
+          if (nextChapterElement) {
+            url = nextChapterElement.getAttribute("href");
+          }
+        } else if (window.location.hostname.includes("mangadex.org")) {
+          console.log("on mangadex.org");
+          const nextChapterElement = document.querySelector(
+            'div[style*="grid-area: next;"] a'
+          );
+          if (nextChapterElement) {
+            url = nextChapterElement.getAttribute("href");
+          }
+        }
+
+        if (url) {
+          sleep(autoNextDelay);
+          window.location.href = url;
+        }
+      }
+    }
+  };
 })();
