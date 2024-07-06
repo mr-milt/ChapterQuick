@@ -68,12 +68,12 @@
             autoNextDelay = result.autoNextDelay; 
             console.log(
               "Retrieved auto next autoNextDelay delay from storage: ",
-              autoNextDelay
+              autoNextDelay / 1000, " seconds"
             );
           } else {
             console.log(
               "Using default auto next autoNextDelay delay: ",
-              autoNextDelay
+              autoNextDelay / 1000, " seconds"
             );
           }
         }
