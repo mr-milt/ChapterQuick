@@ -41,7 +41,7 @@ function updateValues() {
           }
 
           if (result.autoNextDelay !== undefined) {
-            document.getElementById("auto-next-delay").textContent = result.autoNextDelay / 1000 + " seconds";
+            document.getElementById("auto-next-delay").textContent = result.autoNextDelay / 1000 + " second(s)";
           } else {
             document.getElementById("auto-next-delay").textContent = "Default (1 second)";
           }
@@ -57,3 +57,4 @@ document.addEventListener("DOMContentLoaded", function () {
   updateValues();
   setInterval(updateValues, 350); // Update every 350 milliseconds
 });
+

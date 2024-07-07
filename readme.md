@@ -17,6 +17,7 @@
 - **"s"** -> decrese the scolling speed whit 10,
 - **"Shift + w"** -> increse the scrolling speed whit 1,
 - **"Shift + w"** -> decrese the scolling speed whit 1
+- **settings.html** -> ability to turn off disques comments, automaticly go to next chapter upon hitting the bottom of the page and ability to set dalay for automaticly switch chapter
 
 
 ### [Read chance log: **Chance log**](md/chanceLog.md) <br>

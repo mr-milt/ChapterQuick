@@ -8,16 +8,6 @@
 
   const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay)); // uses millisenconds and needs to be awaited
 
-
-  function updateBackgroundColor(makeDark) {
-    if (makeDark) {
-      document.body.style.backgroundColor = "black";
-      document.body.style.color = "white";
-    } else {
-      document.body.style.backgroundColor = "";
-    }
-  }
-
   // Retrieve the initial settings from Chrome storage
   await chrome.storage.local.get(
     ["speed", "scrolling", "comments", "makeDark", "autoNext", "autoNextDelay"],
@@ -31,9 +21,9 @@
         } else {
           if (result.speed !== undefined) {
             speed = result.speed;
-            console.log("Retrieved speed from storage: ", speed);
+            console.log("Retrieved speed from storage: ", speed, "miliseconds");
           } else {
-            console.log("Using default speed: ", speed);
+            console.log("Using default speed: ", speed, "miliseconds");
           }
           if (result.scrolling !== undefined) {
             scrolling = result.scrolling;
@@ -56,7 +46,7 @@
             console.log("Using default dark mode state: ", makeDark);
           }
           if (result.autoNext !== undefined) {
-            autoNext = result.autoNext; 
+            autoNext = result.autoNext;
             console.log(
               "Retrieved auto next chapter state from storage: ",
               autoNext
@@ -65,15 +55,17 @@
             console.log("Using default auto next chapter state: ", autoNext);
           }
           if (result.autoNextDelay !== undefined) {
-            autoNextDelay = result.autoNextDelay; 
+            autoNextDelay = result.autoNextDelay;
             console.log(
               "Retrieved auto next autoNextDelay delay from storage: ",
-              autoNextDelay / 1000, " seconds"
+              autoNextDelay / 1000,
+              " seconds"
             );
           } else {
             console.log(
               "Using default auto next autoNextDelay delay: ",
-              autoNextDelay / 1000, " seconds"
+              autoNextDelay / 1000,
+              " seconds"
             );
           }
         }
@@ -83,11 +75,91 @@
     }
   );
 
+  async function nextChapter(delay) {
+    let url = null;
+    console.log("Auto next chapter enabled");
+    if (window.location.hostname.includes("manga-scans.com")) {
+      console.log("on manga-scans");
+      const nextChapterElement = document.querySelector(
+        ".col-md-6.next-post a"
+      );
+      if (nextChapterElement) {
+        url = nextChapterElement.getAttribute("href");
+      }
+    } else if (window.location.hostname.includes("asuratoon.com")) {
+      console.log("on asuratoon");
+      const nextChapterElement = document.querySelector(".ch-next-btn");
+      if (nextChapterElement) {
+        url = nextChapterElement.getAttribute("href");
+      }
+    } else if (window.location.hostname.includes("webtoons.com")) {
+      console.log("on webtoons");
+      const currentUrl = window.location.href;
+      const urlParams = new URLSearchParams(new URL(currentUrl).search);
+      const currentEpisode = parseInt(urlParams.get("episode_no"));
+      const nextEpisode = currentEpisode + 1;
+      const nextChapterElement = document.querySelector(
+        `li[data-episode-no="${nextEpisode}"] a`
+      );
+      if (nextChapterElement) {
+        url = nextChapterElement.getAttribute("href");
+      }
+    } else if (window.location.hostname.includes("reaperscans.com")) {
+      console.log("on reaperscans");
+      const nextChapterElement = document.querySelector(
+        "a.inline-flex.items-center.transition.rounded.px-3.py-2.text-sm.font-medium.text-neutral-300.hover\\:bg-neutral-700.hover\\:text-white.ml-2"
+      );
+      if (nextChapterElement) {
+        url = nextChapterElement.getAttribute("href");
+      }
+    } else if (window.location.hostname.includes("mangagalaxy.me")) {
+      console.log("on manga galaxy");
+      const nextChapterElement = document.querySelector(".ch-next-btn");
+      if (nextChapterElement) {
+        url = nextChapterElement.getAttribute("href");
+      }
+    } else if (window.location.hostname.includes("toongod.org")) {
+      console.log("on toongod.org");
+      const nextChapterElement = document.querySelector(".btn.next_page");
+      if (nextChapterElement) {
+        url = nextChapterElement.getAttribute("href");
+      }
+    } else if (window.location.hostname.includes("manhuatop.org")) {
+      console.log("on manhuatop.org");
+      const nextChapterElement = document.querySelector(".btn.next_page");
+      if (nextChapterElement) {
+        url = nextChapterElement.getAttribute("href");
+      }
+    } else if (window.location.hostname.includes("mangadex.org")) {
+      console.log("on mangadex.org");
+      const nextChapterElement = document.querySelector(
+        'div[style*="grid-area: next;"] a'
+      );
+      if (nextChapterElement) {
+        url = nextChapterElement.getAttribute("href");
+      }
+    }
+
+    if (url) {
+      await sleep(delay);
+      window.location.href = url;
+    }
+  }
+
   async function updateScroll() {
     console.log("updateScroll starting/stopping");
     while (scrolling) {
       window.scrollBy(0, 3);
       await sleep(speed);
+    }
+  }
+
+  async function updateBackgroundColor(makeDark) {
+    if (makeDark) {
+      document.body.style.backgroundColor = "black";
+      document.body.style.color = "white";
+    } else {
+      document.body.style.backgroundColor = "";
     }
   }
 
@@ -103,73 +175,7 @@
       }
 
       if (event.key === "Enter") {
-        let url = null;
-        console.log("Enter pressed");
-        if (window.location.hostname.includes("manga-scans.com")) {
-          console.log("on manga-scans");
-          const nextChapterElement = document.querySelector(
-            ".col-md-6.next-post a"
-          );
-          if (nextChapterElement) {
-            url = nextChapterElement.getAttribute("href");
-          }
-        } else if (window.location.hostname.includes("asuratoon.com")) {
-          console.log("on asuratoon");
-          const nextChapterElement = document.querySelector(".ch-next-btn");
-          if (nextChapterElement) {
-            url = nextChapterElement.getAttribute("href");
-          }
-        } else if (window.location.hostname.includes("webtoons.com")) {
-          console.log("on webtoons");
-          const currentUrl = window.location.href;
-          const urlParams = new URLSearchParams(new URL(currentUrl).search);
-          const currentEpisode = parseInt(urlParams.get("episode_no"));
-          const nextEpisode = currentEpisode + 1;
-          const nextChapterElement = document.querySelector(
-            `li[data-episode-no="${nextEpisode}"] a`
-          );
-          if (nextChapterElement) {
-            url = nextChapterElement.getAttribute("href");
-          }
-        } else if (window.location.hostname.includes("reaperscans.com")) {
-          console.log("on reaperscans");
-          const nextChapterElement = document.querySelector(
-            "a.inline-flex.items-center.transition.rounded.px-3.py-2.text-sm.font-medium.text-neutral-300.hover\\:bg-neutral-700.hover\\:text-white.ml-2"
-          );
-          if (nextChapterElement) {
-            url = nextChapterElement.getAttribute("href");
-          }
-        } else if (window.location.hostname.includes("mangagalaxy.me")) {
-          console.log("on manga galaxy");
-          const nextChapterElement = document.querySelector(".ch-next-btn");
-          if (nextChapterElement) {
-            url = nextChapterElement.getAttribute("href");
-          }
-        } else if (window.location.hostname.includes("toongod.org")) {
-          console.log("on toongod.org");
-          const nextChapterElement = document.querySelector(".btn.next_page");
-          if (nextChapterElement) {
-            url = nextChapterElement.getAttribute("href");
-          }
-        } else if (window.location.hostname.includes("manhuatop.org")) {
-          console.log("on manhuatop.org");
-          const nextChapterElement = document.querySelector(".btn.next_page");
-          if (nextChapterElement) {
-            url = nextChapterElement.getAttribute("href");
-          }
-        } else if (window.location.hostname.includes("mangadex.org")) {
-          console.log("on mangadex.org");
-          const nextChapterElement = document.querySelector(
-            'div[style*="grid-area: next;"] a'
-          );
-          if (nextChapterElement) {
-            url = nextChapterElement.getAttribute("href");
-          }
-        }
-
-        if (url) {
-          window.location.href = url;
-        }
+        nextChapter(0)
       }
 
       if (event.key === "k") {
@@ -205,7 +211,7 @@
                 chrome.runtime.lastError
               );
             } else {
-              console.log(`Speed decreased to ${speed} and saved.`);
+              console.log(`Speed decreased to ${speed} miliseconds and saved.`);
             }
           });
         } catch (error) {
@@ -224,7 +230,7 @@
                 chrome.runtime.lastError
               );
             } else {
-              console.log(`Speed increased to ${speed} and saved.`);
+              console.log(`Speed increased to ${speed} miliseconds and saved.`);
             }
           });
         } catch (error) {
@@ -243,7 +249,7 @@
                 chrome.runtime.lastError
               );
             } else {
-              console.log(`Speed decreased to ${speed} and saved.`);
+              console.log(`Speed decreased to ${speed} miliseconds and saved.`);
             }
           });
         } catch (error) {
@@ -262,7 +268,7 @@
                 chrome.runtime.lastError
               );
             } else {
-              console.log(`Speed increased to ${speed} and saved.`);
+              console.log(`Speed increased to ${speed} miliseconds and saved.`);
             }
           });
         } catch (error) {
@@ -281,75 +287,16 @@
     if (scrollPoint >= totalPageHeight) {
       console.log("at the bottom");
       if (autoNext) {
-        let url = null;
-        console.log("Auto next chapter enabled");
-        if (window.location.hostname.includes("manga-scans.com")) {
-          console.log("on manga-scans");
-          const nextChapterElement = document.querySelector(
-            ".col-md-6.next-post a"
-          );
-          if (nextChapterElement) {
-            url = nextChapterElement.getAttribute("href");
-          }
-        } else if (window.location.hostname.includes("asuratoon.com")) {
-          console.log("on asuratoon");
-          const nextChapterElement = document.querySelector(".ch-next-btn");
-          if (nextChapterElement) {
-            url = nextChapterElement.getAttribute("href");
-          }
-        } else if (window.location.hostname.includes("webtoons.com")) {
-          console.log("on webtoons");
-          const currentUrl = window.location.href;
-          const urlParams = new URLSearchParams(new URL(currentUrl).search);
-          const currentEpisode = parseInt(urlParams.get("episode_no"));
-          const nextEpisode = currentEpisode + 1;
-          const nextChapterElement = document.querySelector(
-            `li[data-episode-no="${nextEpisode}"] a`
-          );
-          if (nextChapterElement) {
-            url = nextChapterElement.getAttribute("href");
-          }
-        } else if (window.location.hostname.includes("reaperscans.com")) {
-          console.log("on reaperscans");
-          const nextChapterElement = document.querySelector(
-            "a.inline-flex.items-center.transition.rounded.px-3.py-2.text-sm.font-medium.text-neutral-300.hover\\:bg-neutral-700.hover\\:text-white.ml-2"
-          );
-          if (nextChapterElement) {
-            url = nextChapterElement.getAttribute("href");
-          }
-        } else if (window.location.hostname.includes("mangagalaxy.me")) {
-          console.log("on manga galaxy");
-          const nextChapterElement = document.querySelector(".ch-next-btn");
-          if (nextChapterElement) {
-            url = nextChapterElement.getAttribute("href");
-          }
-        } else if (window.location.hostname.includes("toongod.org")) {
-          console.log("on toongod.org");
-          const nextChapterElement = document.querySelector(".btn.next_page");
-          if (nextChapterElement) {
-            url = nextChapterElement.getAttribute("href");
-          }
-        } else if (window.location.hostname.includes("manhuatop.org")) {
-          console.log("on manhuatop.org");
-          const nextChapterElement = document.querySelector(".btn.next_page");
-          if (nextChapterElement) {
-            url = nextChapterElement.getAttribute("href");
-          }
-        } else if (window.location.hostname.includes("mangadex.org")) {
-          console.log("on mangadex.org");
-          const nextChapterElement = document.querySelector(
-            'div[style*="grid-area: next;"] a'
-          );
-          if (nextChapterElement) {
-            url = nextChapterElement.getAttribute("href");
-          }
-        }
-
-        if (url) {
-          await sleep(autoNextDelay);
-          window.location.href = url;
-        }
+        nextChapter(autoNextDelay)
       }
     }
   };
+
+
+
+
+
+
+
+// ------------------------------------------------------
 })();
