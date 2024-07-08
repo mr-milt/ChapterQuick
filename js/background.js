@@ -1,3 +1,5 @@
+// background.js
+
 chrome.runtime.onInstalled.addListener(() => {
   console.log('Extension installed.');
   updateRules();
@@ -69,7 +71,15 @@ function updateRules(comments = null) {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'updateRules') {
     updateRules(message.comments);
-    sendResponse({status: 'Rules updated'});
+    sendResponse({ status: 'Rules updated' });
+  } else if (message.action === 'toContetnt') {
+    // Relay the message to content.js
+    chrome.tabs.query({}, function (tabs) {
+      for (let i = 0; i < tabs.length; i++) {
+        chrome.tabs.sendMessage(tabs[i].id, { action: 'toContetnt', message: message.message });
+      }
+    });
+    sendResponse({ status: 'Message relayed to content.js' });
   }
 });
 

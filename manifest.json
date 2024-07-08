@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ChapterQuick",
-  "version": "1.3",
+  "version": "1.4",
   "description": "This addon adds quality of life features on specific manhwa and webtoon sites.",
   "permissions": [
     "activeTab",

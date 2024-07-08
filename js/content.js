@@ -8,72 +8,100 @@
 
   const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay)); // uses millisenconds and needs to be awaited
 
+  const injectCSS = (css) => {
+    let el = document.createElement("style");
+    el.type = "text/css";
+    el.id = "ChapterQiuckAddonCss";
+    el.innerText = css;
+    document.head.appendChild(el);
+    return el;
+  };
+
+  injectCSS("a:hover {cursor: pointer;}");
+
   // Retrieve the initial settings from Chrome storage
-  await chrome.storage.local.get(
-    ["speed", "scrolling", "comments", "makeDark", "autoNext", "autoNextDelay"],
-    function (result) {
-      try {
-        if (chrome.runtime.lastError) {
-          console.error(
-            "Error retrieving data from storage: ",
-            chrome.runtime.lastError
-          );
-        } else {
-          if (result.speed !== undefined) {
-            speed = result.speed;
-            console.log("Retrieved speed from storage: ", speed, "miliseconds");
-          } else {
-            console.log("Using default speed: ", speed, "miliseconds");
-          }
-          if (result.scrolling !== undefined) {
-            scrolling = result.scrolling;
-            console.log("Retrieved scrolling state from storage: ", scrolling);
-            updateScroll();
-          } else {
-            console.log("Using default scrolling state: ", scrolling);
-          }
-          if (result.comments !== undefined) {
-            comments = result.comments;
-            console.log("Retrieved comments state from storage: ", comments);
-          } else {
-            console.log("Using default comments state: ", comments);
-          }
-          if (result.makeDark !== undefined) {
-            makeDark = result.makeDark;
-            console.log("Retrieved dark mode state from storage: ", makeDark);
-            updateBackgroundColor(makeDark);
-          } else {
-            console.log("Using default dark mode state: ", makeDark);
-          }
-          if (result.autoNext !== undefined) {
-            autoNext = result.autoNext;
-            console.log(
-              "Retrieved auto next chapter state from storage: ",
-              autoNext
+  function getStorage() {
+    chrome.storage.local.get(
+      [
+        "speed",
+        "scrolling",
+        "comments",
+        "makeDark",
+        "autoNext",
+        "autoNextDelay",
+      ],
+      function (result) {
+        try {
+          if (chrome.runtime.lastError) {
+            console.error(
+              "Error retrieving data from storage: ",
+              chrome.runtime.lastError
             );
           } else {
-            console.log("Using default auto next chapter state: ", autoNext);
+            if (result.speed !== undefined) {
+              speed = result.speed;
+              console.log(
+                "Retrieved speed from storage: ",
+                speed,
+                "miliseconds"
+              );
+            } else {
+              console.log("Using default speed: ", speed, "miliseconds");
+            }
+            if (result.scrolling !== undefined) {
+              scrolling = result.scrolling;
+              console.log(
+                "Retrieved scrolling state from storage: ",
+                scrolling
+              );
+              updateScroll();
+            } else {
+              console.log("Using default scrolling state: ", scrolling);
+            }
+            if (result.comments !== undefined) {
+              comments = result.comments;
+              console.log("Retrieved comments state from storage: ", comments);
+            } else {
+              console.log("Using default comments state: ", comments);
+            }
+            if (result.makeDark !== undefined) {
+              makeDark = result.makeDark;
+              console.log("Retrieved dark mode state from storage: ", makeDark);
+              updateBackgroundColor();
+            } else {
+              console.log("Using default dark mode state: ", makeDark);
+            }
+            if (result.autoNext !== undefined) {
+              autoNext = result.autoNext;
+              console.log(
+                "Retrieved auto next chapter state from storage: ",
+                autoNext
+              );
+            } else {
+              console.log("Using default auto next chapter state: ", autoNext);
+            }
+            if (result.autoNextDelay !== undefined) {
+              autoNextDelay = result.autoNextDelay;
+              console.log(
+                "Retrieved auto next autoNextDelay delay from storage: ",
+                autoNextDelay / 1000,
+                " seconds"
+              );
+            } else {
+              console.log(
+                "Using default auto next autoNextDelay delay: ",
+                autoNextDelay / 1000,
+                " seconds"
+              );
+            }
           }
-          if (result.autoNextDelay !== undefined) {
-            autoNextDelay = result.autoNextDelay;
-            console.log(
-              "Retrieved auto next autoNextDelay delay from storage: ",
-              autoNextDelay / 1000,
-              " seconds"
-            );
-          } else {
-            console.log(
-              "Using default auto next autoNextDelay delay: ",
-              autoNextDelay / 1000,
-              " seconds"
-            );
-          }
+        } catch (error) {
+          console.error("Caught error retrieving values: ", error);
         }
-      } catch (error) {
-        console.error("Caught error retrieving values: ", error);
       }
-    }
-  );
+    );
+  }
+  getStorage();
 
   async function nextChapter(delay) {
     let url = null;
@@ -154,7 +182,7 @@
     }
   }
 
-  async function updateBackgroundColor(makeDark) {
+  async function updateBackgroundColor() {
     if (makeDark) {
       document.body.style.backgroundColor = "black";
       document.body.style.color = "white";
@@ -175,7 +203,7 @@
       }
 
       if (event.key === "Enter") {
-        nextChapter(0)
+        nextChapter(0);
       }
 
       if (event.key === "k") {
@@ -287,16 +315,51 @@
     if (scrollPoint >= totalPageHeight) {
       console.log("at the bottom");
       if (autoNext) {
-        nextChapter(autoNextDelay)
+        nextChapter(autoNextDelay);
       }
     }
   };
 
+  async function handeMessage(msg) {
+    getStorage()
+    if (msg == "makeDark") {
+      updateBackgroundColor();
+    } else if (msg == "Deleay") {
+      return;
+    } else if (msg == "autoNextTrue") {
+      autoNext = true;
+    } else if ((mag = "autoNextFalse")) {
+      autoNext = false;
+    } else {
+      console.log("no idea what to do whit ", msg);
+    }
+  }
 
+  // Listen for messages from background.js
+  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === "toContetnt") {
+      console.log("Received message in content.js:", message.message);
+      handeMessage(message.message);
+    }
+  });
 
-
-
-
-
-// ------------------------------------------------------
+  // ------------------------------------------------------
 })();
+
+/*
+
+chrome.storage.local.set({ scrolling: scrolling }, function () {
+  if (chrome.runtime.lastError) {
+    console.error(
+      "Error saving scrolling state to storage: ",
+      chrome.runtime.lastError
+  )}});
+
+
+
+
+
+
+
+
+*/

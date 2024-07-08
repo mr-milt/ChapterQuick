@@ -1,3 +1,8 @@
+function sendMessage(message) {
+  chrome.runtime.sendMessage({ action: 'toContetnt', message: message });
+}
+
+
 document.addEventListener('DOMContentLoaded', function () {
   const toggleComments = document.getElementById('toggle-comments');
   const toggleDarkmode = document.getElementById('toggle-darkmode');
@@ -33,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const newState = toggleDarkmode.checked;
     chrome.storage.local.set({ makeDark: newState }, function () {
       console.log('Dark mode state updated to:', newState);
+      sendMessage("makeDark")
     });
   });
 
@@ -41,6 +47,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const newState = toggleAutoNext.checked;
     chrome.storage.local.set({ autoNext: newState }, function () {
       console.log('Auto next chapter mode state updated to:', newState);
+      if (newState) {
+        sendMessage("autoNextTrue")
+      } else if (!newState) {
+        sendMessage("autoNextFalse")
+      }
     });
   });
 
@@ -49,6 +60,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const newState = parseInt(toggleAutoNextDelay.value, 10) * 1000; // Convert to milliseconds
     chrome.storage.local.set({ autoNextDelay: newState }, function () {
       console.log('Auto next chapter delay updated to:', newState);
+      sendMessage("Deleay")
     });
   });
+
+  // Function to send a message
+
+
 });
+
+
+
