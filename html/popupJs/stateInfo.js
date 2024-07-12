@@ -10,7 +10,6 @@ function updateValues() {
           document.getElementById("scrolling-state").textContent = "Error loading scrolling state";
         } else {
           if (result.speed !== undefined) {
-            console.log(result.speed);
             document.getElementById("speed-value").textContent = result.speed;
           } else {
             document.getElementById("speed-value").textContent = "Default (20)";

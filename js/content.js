@@ -108,6 +108,7 @@
     console.log("Auto next chapter enabled");
     if (window.location.hostname.includes("manga-scans.com")) {
       console.log("on manga-scans");
+      // injectCSS("body {background-color: red;}");
       const nextChapterElement = document.querySelector(
         ".col-md-6.next-post a"
       );
@@ -116,12 +117,14 @@
       }
     } else if (window.location.hostname.includes("asuratoon.com")) {
       console.log("on asuratoon");
+      // injectCSS("body {background-color: red;}");
       const nextChapterElement = document.querySelector(".ch-next-btn");
       if (nextChapterElement) {
         url = nextChapterElement.getAttribute("href");
       }
     } else if (window.location.hostname.includes("webtoons.com")) {
       console.log("on webtoons");
+      // injectCSS("body {background-color: red;}");
       const currentUrl = window.location.href;
       const urlParams = new URLSearchParams(new URL(currentUrl).search);
       const currentEpisode = parseInt(urlParams.get("episode_no"));
@@ -134,6 +137,7 @@
       }
     } else if (window.location.hostname.includes("reaperscans.com")) {
       console.log("on reaperscans");
+      // injectCSS("body {background-color: red;}");
       const nextChapterElement = document.querySelector(
         "a.inline-flex.items-center.transition.rounded.px-3.py-2.text-sm.font-medium.text-neutral-300.hover\\:bg-neutral-700.hover\\:text-white.ml-2"
       );
@@ -142,33 +146,40 @@
       }
     } else if (window.location.hostname.includes("mangagalaxy.me")) {
       console.log("on manga galaxy");
+      // injectCSS("body {background-color: red;}");
       const nextChapterElement = document.querySelector(".ch-next-btn");
       if (nextChapterElement) {
         url = nextChapterElement.getAttribute("href");
       }
     } else if (window.location.hostname.includes("toongod.org")) {
       console.log("on toongod.org");
+      // injectCSS("body {background-color: red;}");
       const nextChapterElement = document.querySelector(".btn.next_page");
       if (nextChapterElement) {
         url = nextChapterElement.getAttribute("href");
       }
     } else if (window.location.hostname.includes("manhuatop.org")) {
       console.log("on manhuatop.org");
+      // injectCSS("body {background-color: red;}");
       const nextChapterElement = document.querySelector(".btn.next_page");
       if (nextChapterElement) {
         url = nextChapterElement.getAttribute("href");
       }
     } else if (window.location.hostname.includes("mangadex.org")) {
       console.log("on mangadex.org");
+      // injectCSS("body {background-color: red;}");
       const nextChapterElement = document.querySelector(
         'div[style*="grid-area: next;"] a'
       );
       if (nextChapterElement) {
         url = nextChapterElement.getAttribute("href");
       }
+    } else {
+      console.log('site not supported')
     }
 
     if (url) {
+      injectCSS("body {background-color: #182338;}");
       await sleep(delay);
       window.location.href = url;
     }
@@ -320,8 +331,8 @@
     }
   };
 
-  async function handeMessage(msg) {
-    getStorage()
+  async function handelMessage(msg) {
+    getStorage();
     if (msg == "makeDark") {
       updateBackgroundColor();
     } else if (msg == "Deleay") {
@@ -339,7 +350,7 @@
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "toContetnt") {
       console.log("Received message in content.js:", message.message);
-      handeMessage(message.message);
+      handelMessage(message.message);
     }
   });
 

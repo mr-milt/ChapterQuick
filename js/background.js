@@ -1,4 +1,5 @@
-// background.js
+try {
+  // background.js
 
 chrome.runtime.onInstalled.addListener(() => {
   console.log('Extension installed.');
@@ -17,7 +18,7 @@ function updateRules(comments = null) {
     console.log("Updating rules. Block comments:", blockComments);
 
     // Default behavior based on comments state
-    if (!blockComments) {
+    if (blockComments) {
       chrome.declarativeNetRequest.updateDynamicRules({
         removeRuleIds: [],
         addRules: [
@@ -69,18 +70,31 @@ function updateRules(comments = null) {
 
 // Listen for messages to update rules
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === 'updateRules') {
-    updateRules(message.comments);
-    sendResponse({ status: 'Rules updated' });
-  } else if (message.action === 'toContetnt') {
-    // Relay the message to content.js
-    chrome.tabs.query({}, function (tabs) {
-      for (let i = 0; i < tabs.length; i++) {
-        chrome.tabs.sendMessage(tabs[i].id, { action: 'toContetnt', message: message.message });
-      }
-    });
-    sendResponse({ status: 'Message relayed to content.js' });
+  try {
+    if (message.action === 'updateRules') {
+      updateRules(message.comments);
+      sendResponse({ status: 'Rules updated' });
+    } else if (message.action === 'toContetnt') {
+      // Relay the message to content.js
+      chrome.tabs.query({}, function (tabs) {
+        for (let i = 0; i < tabs.length; i++) {
+          chrome.tabs.sendMessage(tabs[i].id, { action: 'toContetnt', message: message.message });
+        }
+      });
+      sendResponse({ status: 'Message relayed to content.js' });
+    }
+  } catch (error) {
+    if (error == "Receiving end does not exist.") {
+      throw error;
+    } else if (
+      error == "Could not establish connection. Receiving end does not exist."
+    ) {
+      throw error;
+    } else {
+      console.log("error sending msg: ", error);
+    }
   }
+  
 });
 
 // Function to check and log current rules
@@ -88,4 +102,7 @@ function checkCurrentRules() {
   chrome.declarativeNetRequest.getDynamicRules((rules) => {
     // console.log("Current dynamic rules:", rules);
   });
+}
+} catch (error) {
+  console.log("error from bg: ", error)
 }
