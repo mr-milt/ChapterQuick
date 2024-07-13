@@ -9,6 +9,12 @@ import shutil
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from natsort import natsorted
 import time
+import psutil
+
+def check_disk_space(min_space_gb=3):
+    free_space_gb = psutil.disk_usage('.').free / (1024 * 1024 * 1024)
+    if free_space_gb < min_space_gb:
+        raise Exception(f"Insufficient disk space. At least {min_space_gb}GB is required, but only {free_space_gb:.2f}GB is available.")
 
 def extract_domain(url):
     try:
@@ -23,9 +29,16 @@ def fetch_html(url):
     response.raise_for_status()
     return BeautifulSoup(response.text, 'html.parser')
 
-def fetch_images(chapter_url):
+def fetch_images_manga_scans(chapter_url):
     soup = fetch_html(chapter_url)
     image_urls = [img['src'] for img in soup.find_all('img') if 'src' in img.attrs]
+    print(f"Extracted {len(image_urls)} images from {chapter_url}")
+    return image_urls
+
+def fetch_images_asuratoon(chapter_url):
+    soup = fetch_html(chapter_url)
+    image_div = soup.find('div', {'id': 'readerarea'})
+    image_urls = [img['src'] for img in image_div.find_all('img') if 'src' in img.attrs]
     print(f"Extracted {len(image_urls)} images from {chapter_url}")
     return image_urls
 
@@ -56,9 +69,15 @@ def save_image(image_bytes, path):
     with open(path, 'wb') as f:
         f.write(image_bytes)
 
-def download_and_save_images(chapter_url, headers, chapter_folder):
+def download_and_save_images(chapter_url, headers, chapter_folder, domain):
     chapter_number = get_chapter_number(chapter_url)
-    image_urls = fetch_images(chapter_url)
+    if domain == "manga-scans.com":
+        image_urls = fetch_images_manga_scans(chapter_url)
+    elif domain == "asuratoon.com":
+        image_urls = fetch_images_asuratoon(chapter_url)
+    else:
+        raise Exception(f"Unsupported domain: {domain}")
+    
     for idx, image_url in enumerate(image_urls, start=1):
         _, image_bytes, error = download_image(image_url, headers)
         if image_bytes:
@@ -103,6 +122,7 @@ def create_pdf_from_images(folder, pdf_path):
             pdf.image(image_path, x=x, y=y, w=pdf_width, h=pdf_height)
     pdf.output(pdf_path, "F")
     print(f"PDF created at {pdf_path}")
+    return pdf
 
 def get_size(path):
     total_size = 0
@@ -119,25 +139,54 @@ def format_size(size):
     size_gb = size_mb / 1024
     return f"{size_gb:.2f} GB, {size_mb:.2f} MB, {size_kb:.2f} KB"
 
-def manga_scan(url):
+def fetch_chapters_manga_scans(url):
+    soup = fetch_html(url)
+    chapters = [a['href'] for a in soup.select('ul.chapterslist li a.title')]
+    chapters.sort(key=get_chapter_number)
+    return chapters
+
+def fetch_chapters_asuratoon(url):
+    soup = fetch_html(url)
+    chapters = [a['href'] for a in soup.select('ul.clstyle li div.eph-num a')]
+    chapters.sort(key=get_chapter_number)
+    return chapters
+
+def getManga(url):
+    check_disk_space()
+
     start_time = time.time()
     
     manga_name = extract_manga_name(url)
     script_dir = os.path.dirname(os.path.abspath(__file__))
     base_folder = os.path.join(script_dir, 'mangas', manga_name)
     done_folder = os.path.join(script_dir, 'done')
+
+    if os.path.exists(base_folder):
+        shutil.rmtree(base_folder)
+
+    pdf_name = manga_name.replace(' ', '_') + '.pdf'
+    pdf_path = os.path.join(done_folder, pdf_name)
+
+    if os.path.exists(pdf_path):
+        os.remove(pdf_path)
+
     os.makedirs(base_folder, exist_ok=True)
     os.makedirs(done_folder, exist_ok=True)
     
-    soup = fetch_html(url)
-    chapters = [a['href'] for a in soup.select('ul.chapterslist li a.title')]
-    chapters.sort(key=get_chapter_number)
+    domain = extract_domain(url)
+    if domain == "manga-scans.com":
+        chapters = fetch_chapters_manga_scans(url)
+    elif domain == "asuratoon.com":
+        chapters = fetch_chapters_asuratoon(url)
+    else:
+        raise Exception(f"Unsupported domain: {domain}")
+
     print(f"Found {len(chapters)} chapters for {url}")
     
     headers = {'User-Agent': 'Mozilla/5.0'}
     
     with ThreadPoolExecutor(max_workers=10) as executor:
-        future_to_chapter = {executor.submit(download_and_save_images, chapter_url, headers, os.path.join(base_folder, f'chapter_{get_chapter_number(chapter_url)}')): chapter_url for chapter_url in chapters}
+        future_to_chapter = {executor.submit(download_and_save_images, chapter_url, headers, os.path.join(base_folder, f'chapter_{get_chapter_number(chapter_url)}'), domain): chapter_url for chapter_url in chapters}
         for future in as_completed(future_to_chapter):
             chapter_url = future_to_chapter[future]
             try:
@@ -168,9 +217,7 @@ def manga_scan(url):
     pdf_start_time = time.time()
 
     # Create PDF from images
-    pdf_name = manga_name.replace(' ', '_') + '.pdf'
-    pdf_path = os.path.join(done_folder, pdf_name)
-    create_pdf_from_images(all_images_folder, pdf_path)
+    pdf = create_pdf_from_images(all_images_folder, pdf_path)
 
     # Measure the time after the PDF creation is done
     pdf_end_time = time.time()
@@ -191,12 +238,17 @@ def manga_scan(url):
     total_formatted_time = time.strftime("%H:%M:%S", time.gmtime(total_elapsed_time))
     pdf_formatted_time = time.strftime("%H:%M:%S", time.gmtime(pdf_creation_time))
 
-
     print(f"Finished downloading all images for {url}")
     print(f"Total images downloaded: {total_images}")
     print(f"Total time taken: {total_formatted_time}")
     print(f"Time taken to create PDF: {pdf_formatted_time}")
 
-# Example usage
+    return pdf
+
+# Example usage for manga-scans.com
 url = 'https://manga-scans.com/manga/the-legendary-hunter-becomes-young-again/'
-manga_scan(url)
+getManga(url)
+
+# Example usage for asuratoon.com
+url = 'https://asuratoon.com/manga/demon-king/'
+getManga(url)

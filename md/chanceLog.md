@@ -4,6 +4,7 @@
     - Added automatic switching chapter whit configurable delay 
     - Made it so that active tab get chances call automatically after chanced in settings.html without needing to reload page
     - More supported sites
+    - backend for link to pdf (currently only available for manga-scans.com)
     - Bug fixes
 
 2. ### 1.3:
