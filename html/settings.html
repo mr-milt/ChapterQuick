@@ -6,13 +6,10 @@
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
   <link rel="stylesheet" href="css/index.css" />
   <link rel="stylesheet" href="css/settings.css">
-
-  <style></style>
 </head>
-
-<body >
+<body>
   <div class="form-check form-switch">
-    <label class="form-check-label" for="toggle-comments">hide comments</label>
+    <label class="form-check-label" for="toggle-comments">Hide comments</label>
     <input class="form-check-input" type="checkbox" id="toggle-comments" />
   </div>
   <div class="form-check form-switch">
@@ -27,11 +24,13 @@
     <label class="form-check-label" for="toggle-autoNextDelay">Next chapter delay (seconds)</label>
     <input type="number" min="0" step="1" value="1" id="toggle-autoNextDelay" />
   </div>
+  <div class="quantity">
+    <button id="downloadMangaBtn" class="form-check-label">Download Manga as PDF</button>
+  </div>
   <br>
-
   <a class="btn btn-primary" href="ChapterQuick.html" role="button">Back</a>
+  <script src="../js/jquery/jquery-3.7.1.min.js"></script>
+  <script src="popupJs/settingsStyle.js"></script>
+  <script src="popupJs/settings.js"></script>
 </body>
-<script src="../js/jquery/jquery-3.7.1.min.js"></script>
-<script src="popupJs/settingsStyle.js"></script>
-<script src="popupJs/settings.js"></script>
 </html>

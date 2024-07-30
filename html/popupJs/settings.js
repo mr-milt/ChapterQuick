@@ -1,6 +1,7 @@
 function sendMessage(message) {
   try {
-    chrome.runtime.sendMessage({ action: "toContetnt", message: message });
+    chrome.runtime.sendMessage({ action: "toContent", message: message });
+    console.log("sending message")
   } catch (error) {
     if (error == "Receiving end does not exist.") {
       throw error;
@@ -9,7 +10,7 @@ function sendMessage(message) {
     ) {
       throw error;
     } else {
-      console.log("error sending msg: ", error);
+      console.log("Error sending message:", error);
     }
   }
 }
@@ -19,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const toggleDarkmode = document.getElementById("toggle-darkmode");
   const toggleAutoNext = document.getElementById("toggle-autoNext");
   const toggleAutoNextDelay = document.getElementById("toggle-autoNextDelay");
+  const downloadMangaBtn = document.getElementById("downloadMangaBtn");
 
   // Retrieve the current state
   chrome.storage.local.get(
@@ -68,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log("Auto next chapter mode state updated to:", newState);
       if (newState) {
         sendMessage("autoNextTrue");
-      } else if (!newState) {
+      } else {
         sendMessage("autoNextFalse");
       }
     });
@@ -79,9 +81,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const newState = parseInt(toggleAutoNextDelay.value, 10) * 1000; // Convert to milliseconds
     chrome.storage.local.set({ autoNextDelay: newState }, function () {
       console.log("Auto next chapter delay updated to:", newState);
-      sendMessage("Deleay");
+      sendMessage("Delay");
     });
   });
 
-  // Function to send a message
+  // Add event listener to handle the download button click
+  downloadMangaBtn.addEventListener("click", function () {
+    sendMessage('download');
+  });
 });

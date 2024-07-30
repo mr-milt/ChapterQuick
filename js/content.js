@@ -115,8 +115,24 @@
       if (nextChapterElement) {
         url = nextChapterElement.getAttribute("href");
       }
-    } else if (window.location.hostname.includes("asuratoon.com")) {
-      console.log("on asuratoon");
+    } else if (window.location.hostname.includes("en-thunderscans.com")) {
+      console.log("on en-thunderscans.com");
+      // injectCSS("body {background-color: red;}");
+      const nextChapterElement = document.querySelector(".ch-next-btn");
+      if (nextChapterElement) {
+        url = nextChapterElement.getAttribute("href");
+      }
+    } else if (window.location.hostname.includes("asuracomic.net")) {
+      console.log("on asuracomic.net");
+      // injectCSS("body {background-color: red;}");
+      const nextChapterElement = Array.from(
+        document.querySelectorAll("div.flex.items-center.self-end.gap-x-3 a")
+      ).find((a) => a.innerText.includes("Next"));
+      if (nextChapterElement) {
+        url = nextChapterElement.getAttribute("href");
+      }
+    } else if (window.location.hostname.includes("asura-scans.com")) {
+      console.log("on asura-scans.com");
       // injectCSS("body {background-color: red;}");
       const nextChapterElement = document.querySelector(".ch-next-btn");
       if (nextChapterElement) {
@@ -174,8 +190,17 @@
       if (nextChapterElement) {
         url = nextChapterElement.getAttribute("href");
       }
+    } else if (window.location.hostname.includes("mangabuddy.com")) {
+      console.log("on mangabuddy.com");
+      // injectCSS("body {background-color: red;}");
+      const nextChapterElement = document.querySelector(
+        ".chap-btn.main__button.next"
+      );
+      if (nextChapterElement) {
+        url = nextChapterElement.getAttribute("href");
+      }
     } else {
-      console.log('site not supported')
+      console.log("site not supported");
     }
 
     if (url) {
@@ -195,10 +220,55 @@
 
   async function updateBackgroundColor() {
     if (makeDark) {
-      document.body.style.backgroundColor = "black";
-      document.body.style.color = "white";
+      document.body.style.backgroundColor = "#111319";
+      document.body.style.color = "#FFFFFF";
     } else {
       document.body.style.backgroundColor = "";
+    }
+  }
+
+  async function fetchAndDownloadManga() {
+    try {
+      const urlToSend = window.location.href;
+      console.log(urlToSend);
+      const response = await fetch(
+        `http://127.0.0.1:5000/get_manga?url=${encodeURIComponent(urlToSend)}`
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to fetch manga");
+      }
+
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = downloadUrl;
+      a.download = "manga.pdf";
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(downloadUrl);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.log("Error fetching and downloading manga:", error);
+      alert("An error occurred: " + error.message);
+    }
+  }
+
+  async function handelMessage(msg) {
+    getStorage();
+    if (msg == "makeDark") {
+      updateBackgroundColor();
+    } else if (msg == "Deleay") {
+      return;
+    } else if (msg == "autoNextTrue") {
+      autoNext = true;
+    } else if (msg == "autoNextFalse") {
+      autoNext = false;
+    } else if (msg == "download") {
+      fetchAndDownloadManga();
+    } else {
+      console.log("no idea what to do whit ", msg);
     }
   }
 
@@ -296,6 +366,14 @@
         }
       }
 
+      if (event.key === "p") {
+        console.log("pressed p");
+        fetchAndDownloadManga();
+      } else if (event.key === "P") {
+        console.log("pressed p");
+        fetchAndDownloadManga();
+      }
+
       if (event.key === "S" && event.shiftKey) {
         console.log("Shift + s pressed");
         speed += 1;
@@ -331,24 +409,9 @@
     }
   };
 
-  async function handelMessage(msg) {
-    getStorage();
-    if (msg == "makeDark") {
-      updateBackgroundColor();
-    } else if (msg == "Deleay") {
-      return;
-    } else if (msg == "autoNextTrue") {
-      autoNext = true;
-    } else if ((mag = "autoNextFalse")) {
-      autoNext = false;
-    } else {
-      console.log("no idea what to do whit ", msg);
-    }
-  }
-
   // Listen for messages from background.js
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.action === "toContetnt") {
+    if (message.action === "toContent") {
       console.log("Received message in content.js:", message.message);
       handelMessage(message.message);
     }
@@ -365,8 +428,6 @@ chrome.storage.local.set({ scrolling: scrolling }, function () {
       "Error saving scrolling state to storage: ",
       chrome.runtime.lastError
   )}});
-
-
 
 
 

@@ -42,8 +42,8 @@ def fetch_images_asuratoon(chapter_url):
     print(f"Extracted {len(image_urls)} images from {chapter_url}")
     return image_urls
 
-def convert_webp_to_png(webp_bytes):
-    image = Image.open(BytesIO(webp_bytes)).convert("RGB")
+def convert_image_to_png(image_bytes):
+    image = Image.open(BytesIO(image_bytes)).convert("RGB")
     output = BytesIO()
     image.save(output, format="PNG")
     return output.getvalue()
@@ -81,8 +81,7 @@ def download_and_save_images(chapter_url, headers, chapter_folder, domain):
     for idx, image_url in enumerate(image_urls, start=1):
         _, image_bytes, error = download_image(image_url, headers)
         if image_bytes:
-            if image_url.lower().endswith('.webp'):
-                image_bytes = convert_webp_to_png(image_bytes)
+            image_bytes = convert_image_to_png(image_bytes)
             image_name = f'chapter_{chapter_number}_{idx}.png'
             image_path = os.path.join(chapter_folder, image_name)
             save_image(image_bytes, image_path)
@@ -120,9 +119,11 @@ def create_pdf_from_images(folder, pdf_path):
 
             pdf.add_page()
             pdf.image(image_path, x=x, y=y, w=pdf_width, h=pdf_height)
-    pdf.output(pdf_path, "F")
+    pdf_output = BytesIO()
+    pdf.output(pdf_output, "F")
+    pdf_output.seek(0)
     print(f"PDF created at {pdf_path}")
-    return pdf
+    return pdf_output  # Return the PDF as bytes
 
 def get_size(path):
     total_size = 0
@@ -217,7 +218,7 @@ def getManga(url):
     pdf_start_time = time.time()
 
     # Create PDF from images
-    pdf = create_pdf_from_images(all_images_folder, pdf_path)
+    pdf_output = create_pdf_from_images(all_images_folder, pdf_path)
 
     # Measure the time after the PDF creation is done
     pdf_end_time = time.time()
@@ -243,12 +244,5 @@ def getManga(url):
     print(f"Total time taken: {total_formatted_time}")
     print(f"Time taken to create PDF: {pdf_formatted_time}")
 
-    return pdf
-
-# Example usage for manga-scans.com
-url = 'https://manga-scans.com/manga/the-legendary-hunter-becomes-young-again/'
-getManga(url)
-
-# Example usage for asuratoon.com
-url = 'https://asuratoon.com/manga/demon-king/'
-getManga(url)
+    # Return the PDF bytes directly
+    return pdf_output.getvalue()

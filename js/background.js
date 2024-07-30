@@ -17,7 +17,7 @@ function updateRules(comments = null) {
     const blockComments = comments !== null ? comments : result.comments || false;
     console.log("Updating rules. Block comments:", blockComments);
 
-    // Default behavior based on comments state
+    // Default behavior based on comments state       
     if (blockComments) {
       chrome.declarativeNetRequest.updateDynamicRules({
         removeRuleIds: [],
@@ -41,6 +41,17 @@ function updateRules(comments = null) {
             },
             "condition": {
               "urlFilter": "*comments*",
+              "resourceTypes": ["main_frame", "sub_frame", "script"]
+            }
+          },
+          {
+            "id": 3,
+            "priority": 1,
+            "action": {
+              "type": "block"
+            },
+            "condition": {
+              "urlFilter": "*://comments.mangabuddy.com/*",
               "resourceTypes": ["main_frame", "sub_frame", "script"]
             }
           }
@@ -74,15 +85,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === 'updateRules') {
       updateRules(message.comments);
       sendResponse({ status: 'Rules updated' });
-    } else if (message.action === 'toContetnt') {
+    } else if (message.action === 'toContent') {
       // Relay the message to content.js
       chrome.tabs.query({}, function (tabs) {
         for (let i = 0; i < tabs.length; i++) {
-          chrome.tabs.sendMessage(tabs[i].id, { action: 'toContetnt', message: message.message });
+          chrome.tabs.sendMessage(tabs[i].id, { action: 'toContent', message: message.message });
         }
       });
       sendResponse({ status: 'Message relayed to content.js' });
     }
+    console.log("recived message")
   } catch (error) {
     if (error == "Receiving end does not exist.") {
       throw error;
